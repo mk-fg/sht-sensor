@@ -86,6 +86,9 @@ ShtComms class is an implementation of 2-wire protocol that sensor uses and
 probably should not be used directly, all the coefficients, calculations and
 such high-level logic is defined in Sht class.
 
+Installed python module can also be used from cli via the usual `python -m
+sht_sensor ...` convention.
+
 
 Installation
 --------------------

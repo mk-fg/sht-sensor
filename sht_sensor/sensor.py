@@ -5,6 +5,21 @@ from __future__ import print_function
 import itertools as it, operator as op, functools as ft
 import os, sys, logging, time, math
 
+try: import sht_sensor
+except ImportError:
+	# Make sure tool works from a checkout
+	if __name__ != '__main__': raise
+	from os.path import dirname, exists, isdir, join, abspath
+	pkg_root = abspath(dirname(__file__))
+	for pkg_root in pkg_root, dirname(pkg_root):
+		if isdir(join(pkg_root, 'sht_sensor'))\
+				and exists(join(pkg_root, 'setup.py')):
+			sys.path.insert(0, dirname(__file__))
+			try: import sht_sensor
+			except ImportError: pass
+			else: break
+	else: raise ImportError('Failed to find/import "sht_sensor" module')
+
 
 class ShtFailure(Exception): pass
 class ShtCommFailure(ShtFailure): pass
