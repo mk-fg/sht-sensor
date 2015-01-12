@@ -12,19 +12,20 @@ except IOError: readme = ''
 setup(
 
 	name = 'sht-sensor',
-	version = '15.01.3',
+	version = '15.01.4',
 	author = 'Mike Kazantsev',
 	author_email = 'mk.fraggod@gmail.com',
 	license = 'WTFPL',
 	keywords = [
 		'sht', 'sensor', 'sht1x', 'sht7x', 'sensirion', 'ic',
-		'T', 'temperature', 'RH', 'humidity', 'dew point',
+		'T', 'temperature', 'RH', 'relative', 'humidity', 'dew point', 'celsius',
 		'environment', 'conditioning', 'measurement',
-		'gpio', 'hardware', 'driver', 'serial', '2-wire' ],
+		'gpio', 'hardware', 'driver', 'serial', '2-wire', 'crc8' ],
 
 	url = 'http://github.com/mk-fg/sht-sensor',
 
-	description = 'Driver for Sensirion SHT1x and SHT7x sensors connected to GPIO pins.',
+	description = 'Driver and command-line tool'
+		' for Sensirion SHT1x and SHT7x sensors connected to GPIO pins.',
 	long_description = readme,
 
 	classifiers = [

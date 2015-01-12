@@ -1,8 +1,8 @@
 sht-sensor
 --------------------
 
-Driver and command-line tool for Sensirion SHT1x and SHT7x sensors connected to
-GPIO pins.
+Python driver and command-line tool for Sensirion SHT1x and SHT7x sensors
+connected to GPIO pins.
 
 Pure-python module only requires /sys/class/gpio interface, provided by the
 Linux kernel and should work on any device that has it (including RPi,
@@ -169,7 +169,7 @@ Stuff that is not implemented
 	the Sht class.
 	Or degrees-Celsius value can easily be converted to F after the fact.
 
-	Metric system is used here, so I had no need for these.
+	Metric system is used here, so I just had no need for these.
 
 * Lower-resolution measurements.
 
