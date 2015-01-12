@@ -167,6 +167,7 @@ class Sht(ShtComms):
 	# All table/chapter refs here point to:
 	#  Sensirion_Humidity_SHT7x_Datasheet_V5.pdf
 
+	voltage_default = '3.5V'
 	c = dict(
 		d1={ # Table 8, C
 			'5V': -40.1,
@@ -182,13 +183,13 @@ class Sht(ShtComms):
 	)
 	cmd = dict(t=0b00000011, rh=0b00000101)
 
-	def __init__(self, pin_sck, pin_data, voltage='3.5V', **sht_comms_kws):
+	def __init__(self, pin_sck, pin_data, voltage=None, **sht_comms_kws):
 		'''"voltage" setting is important,
 					as it influences temperature conversion coefficients!!!
-			Unless you're using SHT7x, please make sure
-				all coefficients match your sensor's datasheet.'''
-		assert voltage in self.c.d1, [voltage, self.c.d1.keys()]
-		self.voltage = voltage
+			Unless you're using SHT1x/SHT7x, please make
+				sure all coefficients match your sensor's datasheet.'''
+		self.voltage = voltage or self.voltage_default
+		assert self.voltage in self.c.d1, [self.voltage, self.c.d1.keys()]
 		super(Sht, self).__init__(pin_sck, pin_data, **sht_comms_kws)
 
 	def read_t(self):
