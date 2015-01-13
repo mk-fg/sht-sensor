@@ -183,20 +183,23 @@ class Sht(ShtComms):
 	#  Sensirion_Humidity_SHT7x_Datasheet_V5.pdf
 
 	voltage_default = '3.5V'
-	c = dict(
-		d1={ # Table 8, C
+
+	class c:
+		d1 = { # Table 8, C
 			'5V': -40.1,
 			'4V': -39.8,
 			'3.5V': -39.7,
 			'3V': -39.6,
-			'2.5V': -39.4 },
-		d2=0.01, # Table 8, C/14b
-		c1=-2.0468, c2=0.0367, c3=-1.5955e-6, # Table 6, 12b
-		t1=0.01, t2=0.00008, # Table 7, 12b
-		tn=dict(water=243.12, ice=272.62), # Table 9
-		m=dict(water=17.62, ice=22.46), # Table 9
-	)
-	cmd = dict(t=0b00000011, rh=0b00000101)
+			'2.5V': -39.4 }
+		d2 = 0.01 # Table 8, C/14b
+		c1, c2, c3 = -2.0468, 0.0367, -1.5955e-6 # Table 6, 12b
+		t1, t2 = 0.01, 0.00008 # Table 7, 12b
+		tn = dict(water=243.12, ice=272.62) # Table 9
+		m = dict(water=17.62, ice=22.46) # Table 9
+
+	class cmd:
+		t = 0b00000011
+		rh = 0b00000101
 
 	def __init__(self, pin_sck, pin_data, voltage=None, **sht_comms_kws):
 		'''"voltage" setting is important,
