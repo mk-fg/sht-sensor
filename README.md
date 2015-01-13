@@ -38,14 +38,16 @@ a python module).
 
 Example, for SCK pin 21 and DATA pin 17:
 
-	% sht -v 21 17
-	TODO: copy-pasted output
+	% sht -v -trd 21 17
+	temperature: 25.07
+	rh: 26.502119362
+	dew_point: 4.4847911176
 
 For both the tool and module, be sure to check/specify correct voltage that the
 sensor is connected to:
 
 	% sht --voltage=5V --temperature 21 17
-	TODO: copy-pasted output
+	25.08
 
 This voltage value is used to pick coefficient (as presented in datasheet table)
 for temperature calculation, and incorrect setting here should result in
