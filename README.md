@@ -32,19 +32,25 @@ tool, which should be installed along with the module (or can be used via ./sht
 symlink in the repo root without installation).
 See "Installation" section below on how to install the module.
 
-GPIO pin numbers (to which SCK and DATA sensor pins are connected) must be
-specified either on command-line (for cli tool) or on class init (when using as
-a python module).
+GPIO numbers (to which SCK and DATA sensor pins are connected) must be specified
+either on command-line (for cli tool) or on class init (when using as a python
+module).
 
-Example, for SCK pin 21 and DATA pin 17:
+Example, for SCK connected to gpio 21 and DATA to gpio 17:
 
 	% sht -v -trd 21 17
 	temperature: 25.07
 	rh: 26.502119362
 	dew_point: 4.4847911176
 
-For both the tool and module, be sure to check/specify correct voltage (default
-is '3.5V') that the sensor is connected to:
+GPIO "pin" numbers here (and in python module) use whichever numbering scheme
+kernel has in /sys/class/gpio, which is likely be totally different from the
+actual (physical) pin numbers on the board headers, and can potentially change
+between board revisions (e.g. RPi rev 1.0 -> 2.0) or even kernel updates, so be
+sure to check up-to-date docs on these.
+
+For both the tool and module, also be sure to check/specify correct voltage
+(default is '3.5V') that the sensor is connected to:
 
 	% sht --voltage=5V --temperature 21 17
 	25.08
