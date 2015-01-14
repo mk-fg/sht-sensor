@@ -18,8 +18,8 @@ serial interface.
 SHT1x differs from SHT7x in packaging, with SHT1x being surface-mountable one
 and latter having pluggable FR4 package.
 
-Sensors include additional functionality available via status register (like VDD
-level check, enabling internal heating element, resolution, OTP reload, etc)
+Sensors include additional functionality available via the status register (like
+VDD level check, enabling internal heating element, resolution, OTP reload, etc)
 which may or may not also be implemented here, see "Stuff that is not
 implemented" section at the end.
 
@@ -43,15 +43,15 @@ Example, for SCK pin 21 and DATA pin 17:
 	rh: 26.502119362
 	dew_point: 4.4847911176
 
-For both the tool and module, be sure to check/specify correct voltage that the
-sensor is connected to:
+For both the tool and module, be sure to check/specify correct voltage (default
+is '3.5V') that the sensor is connected to:
 
 	% sht --voltage=5V --temperature 21 17
 	25.08
 
 This voltage value is used to pick coefficient (as presented in datasheet table)
 for temperature calculation, and incorrect setting here should result in
-incorrect values (all of them, as RH also uses T in calculation).
+incorrect output values (all of them, as RH also has T in its formula).
 
 If you're using non-SHT1x/SHT7x, but a similar sensor (e.g. some later model),
 it might be a good idea to look at the Sht class in the code and make sure all
@@ -59,7 +59,7 @@ coefficients (taken from
 [SHT7x datasheet](http://www.sensirion.com/fileadmin/user_upload/customers/sensirion/Dokumente/Humidity/Sensirion_Humidity_SHT7x_Datasheet_V5.pdf))
 there match your model's datasheet exactly.
 
-See `sht --help` output for more command-line arguments for the tool.
+See `sht --help` output for the full list of options for command-line tool.
 
 Example usage from python code:
 
@@ -73,7 +73,7 @@ it is presented in datasheet table) for calculations, if it's not module-default
 '3.5V', for example: `sht = Sht(21, 17, voltage='5V')`.
 
 Some calculations (e.g. for RH) use other sensor-provided values, so it's
-possible to pass these to corresponding read_* functions, to avoid heating-up
+possible to pass these to the corresponding read_* methods, to avoid heating-up
 sensor with unnecessary extra measurements:
 
 	t = sht.read_t()
@@ -81,12 +81,14 @@ sensor with unnecessary extra measurements:
 	dew_point = sht.read_dew_point(t, rh)
 
 If included sht_sensor.gpio module (accessing /sys/class/gpio directly) should
-not be used, its interface ("get_pin_value" and "set_pin_value" attrs/functions)
-can be re-implemented and passed as gpio keyword argument on Sht class init.
+not be used (e.g. on non-linux or with different gpio interface), its interface
+("get_pin_value" and "set_pin_value" attrs/functions) can be re-implemented and
+passed as a "gpio" keyword argument on Sht class init.
 
 ShtComms class is an implementation of 2-wire protocol that sensor uses and
-probably should not be used directly, all the coefficients, calculations and
-such high-level logic is defined in Sht class.
+probably should not be used directly.
+All the coefficients, calculations and such high-level logic is defined in Sht
+class, extending ShtComms.
 
 Installed python module can also be used from cli via the usual `python -m
 sht_sensor ...` convention.
@@ -143,7 +145,10 @@ some particular case:
 * [rpiSht1x](https://pypi.python.org/pypi/rpiSht1x) (python package)
 
 	Based on RaspberryPi-specific RPi.GPIO module, does not check CRC8 checksums
-	for received data, uses hard-coded 5V temperature conversion coefficients.
+	for received data, uses hard-coded 5V temperature conversion coefficients,
+	returns invalid values even if ack's are incorrect.
+
+	Seem to be more of a proof-of-concept, pretty much unusable anywhere else.
 
 * sht1x module in [Linux kernel](https://www.kernel.org/)
 
