@@ -12,12 +12,13 @@ except IOError: readme = ''
 setup(
 
 	name = 'sht-sensor',
-	version = '15.5.0',
+	version = '15.10.0',
 	author = 'Mike Kazantsev',
 	author_email = 'mk.fraggod@gmail.com',
 	license = 'WTFPL',
 	keywords = [
-		'sht', 'sensor', 'sht1x', 'sht7x', 'sensirion', 'ic',
+		'sht', 'sensor', 'sensirion', 'ic',
+		'sht1x', 'sht7x', 'sht10', 'sht11', 'sht15', 'sht71', 'sht75',
 		'T', 'temperature', 'RH', 'relative', 'humidity', 'dew point', 'celsius',
 		'environment', 'conditioning', 'measurement',
 		'gpio', 'hardware', 'driver', 'serial', '2-wire', 'crc8' ],

@@ -12,9 +12,10 @@ Its main purpose is reading temperature (in degrees Celsius) and humidity (%RH)
 values from these devices, checking CRC8 checksums for received data to make
 sure it was not corrupted in transfer.
 
-SHT1x and SHT7x are fairly popular and accurate capacitive/band-gap relative
-humidity and temperature sensor IC's, with digital output via custom 2-wire
-serial interface.
+SHT1x (SHT10, SHT11, SHT15) and SHT7x (SHT71, SHT75) are fairly popular and
+accurate capacitive/band-gap relative humidity and temperature sensor IC's, with
+digital output via custom 2-wire serial interface.
+
 SHT1x differs from SHT7x in packaging, with SHT1x being surface-mountable one
 and latter having pluggable FR4 package.
 
@@ -86,7 +87,7 @@ sensor with unnecessary extra measurements:
 	rh = sht.read_rh(t)
 	dew_point = sht.read_dew_point(t, rh)
 
-If included sht_sensor.gpio module (accessing /sys/class/gpio directly) should
+If included `sht_sensor.gpio` module (accessing /sys/class/gpio directly) should
 not be used (e.g. on non-linux or with different gpio interface), its interface
 ("get_pin_value" and "set_pin_value" attrs/functions) can be re-implemented and
 passed as a "gpio" keyword argument on Sht class init.
@@ -142,35 +143,6 @@ Alternatively, `./sht` tool can be run right from the checkout tree without any
 installation, if that's the only thing you need there.
 
 
-Links
---------------------
-
-Other drivers for these sensors that I know of and might be more suitable for
-some particular case:
-
-* [rpiSht1x](https://pypi.python.org/pypi/rpiSht1x) (python package)
-
-	Based on RaspberryPi-specific RPi.GPIO module, does not check CRC8 checksums
-	for received data, uses hard-coded 5V temperature conversion coefficients,
-	returns invalid values even if ack's are incorrect.
-
-	Seem to be more of a proof-of-concept, pretty much unusable anywhere else.
-
-* sht1x module in [Linux kernel](https://www.kernel.org/)
-
-	Looks very mature and feature-complete, probably used a lot for various
-	platforms' hardware monitoring drivers.
-
-	Seem to be only for internal use (i.e. from other kernel modules) at the
-	moment (3.17.x), but should be possible (and easy) to add Device Tree hooks
-	there, which would allow to specify how it is connected (gpio pins) via Device
-	Tree.
-
-* [SHT1x module for Arduino](https://github.com/practicalarduino/SHT1x)
-
-	C++ code, rpiSht1x above is based on this one.
-
-
 Stuff that is not implemented
 --------------------
 
@@ -201,3 +173,32 @@ Stuff that is not implemented
 * Changing SCK clock rate.
 
 	Might be desirable for slower boards or more electric-noisy environments.
+
+
+Links
+--------------------
+
+Other drivers for these sensors that I know of and might be more suitable for
+some particular case:
+
+* [rpiSht1x](https://pypi.python.org/pypi/rpiSht1x) (python package)
+
+	Based on RaspberryPi-specific RPi.GPIO module, does not check CRC8 checksums
+	for received data, uses hard-coded 5V temperature conversion coefficients,
+	returns invalid values even if ack's are incorrect.
+
+	Seem to be more of a proof-of-concept, pretty much unusable anywhere else.
+
+* sht1x module in [Linux kernel](https://www.kernel.org/)
+
+	Looks very mature and feature-complete, probably used a lot for various
+	platforms' hardware monitoring drivers.
+
+	Seem to be only for internal use (i.e. from other kernel modules) at the
+	moment (3.17.x), but should be possible (and easy) to add Device Tree hooks
+	there, which would allow to specify how it is connected (gpio pins) via Device
+	Tree.
+
+* [SHT1x module for Arduino](https://github.com/practicalarduino/SHT1x)
+
+	C++ code, rpiSht1x above is based on this one.
