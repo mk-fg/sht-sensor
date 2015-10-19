@@ -1,4 +1,5 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
+#-*- coding: utf-8 -*-
 
 from setuptools import setup, find_packages
 import os, sys
@@ -12,7 +13,7 @@ except IOError: readme = ''
 setup(
 
 	name = 'sht-sensor',
-	version = '15.10.0',
+	version = '15.10.1',
 	author = 'Mike Kazantsev',
 	author_email = 'mk.fraggod@gmail.com',
 	license = 'WTFPL',
