@@ -180,7 +180,7 @@ class ShtComms(object):
 
 class Sht(ShtComms):
 	# All table/chapter refs here point to:
-	#  Sensirion_Humidity_SHT7x_Datasheet_V5.pdf
+	#  Sensirion_Humidity_and_Temperature_Sensors_SHT7x_Datasheet_V5.pdf
 
 	voltage_default = '3.5V'
 

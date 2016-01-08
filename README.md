@@ -63,7 +63,7 @@ incorrect output values (all of them, as RH also has T in its formula).
 If you're using non-SHT1x/SHT7x, but a similar sensor (e.g. some later model),
 it might be a good idea to look at the Sht class in the code and make sure all
 coefficients (taken from
-[SHT7x datasheet](http://www.sensirion.com/fileadmin/user_upload/customers/sensirion/Dokumente/Humidity/Sensirion_Humidity_SHT7x_Datasheet_V5.pdf))
+[SHT7x datasheet](https://www.sensirion.com/fileadmin/user_upload/customers/sensirion/Dokumente/Humidity_and_Temperature_Sensors/Sensirion_Humidity_and_Temperature_Sensors_SHT7x_Datasheet_V5.pdf))
 there match your model's datasheet exactly.
 
 See `sht --help` output for the full list of options for command-line tool.
