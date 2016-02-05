@@ -51,14 +51,16 @@ between board revisions (e.g. RPi rev 1.0 -> 2.0) or even kernel updates, so be
 sure to check up-to-date docs on these.
 
 For both the tool and module, also be sure to check/specify correct voltage
-(default is '3.5V') that the sensor is connected to:
+(default is '3.5V', value is from the datasheet table, not free-form!) that the
+sensor's VDD pin is connected to:
 
 	% sht --voltage=5V --temperature 21 17
 	25.08
 
 This voltage value is used to pick coefficient (as presented in datasheet table)
-for temperature calculation, and incorrect setting here should result in
-incorrect output values (all of them, as RH also has T in its formula).
+for temperature calculation, and incorrect setting here should result in less
+precise output values (these values add/subtract 0.1th of degree, while sensor's
+typical precision is +/- 0.4 degree, so mostly irrelevant).
 
 If you're using non-SHT1x/SHT7x, but a similar sensor (e.g. some later model),
 it might be a good idea to look at the Sht class in the code and make sure all
@@ -75,9 +77,9 @@ Example usage from python code:
 	print 'Temperature', sht.read_t()
 	print 'Relative Humidity', sht.read_rh()
 
-Again, be sure to specify correct voltage value (on sensor's VDD pin, exactly as
-it is presented in datasheet table) for calculations, if it's not module-default
-'3.5V', for example: `sht = Sht(21, 17, voltage='5V')`.
+Voltage value (see note on it above) on sensor's VDD pin can be specified for
+calculations exactly as it is presented in datasheet table as a string, if it's
+not module-default '3.5V', for example: `sht = Sht(21, 17, voltage='5V')`.
 
 Some calculations (e.g. for RH) use other sensor-provided values, so it's
 possible to pass these to the corresponding read_* methods, to avoid heating-up
