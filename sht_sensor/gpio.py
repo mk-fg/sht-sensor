@@ -62,7 +62,8 @@ def set_pin_value(n, v, k='value', force=False, _pin_state=dict()):
 	if not force and _pin_state.get(n) == v: return
 	if _pin_state.get(n) == v: return
 	# log.debug('Setting parameter of pin-%s: %s = %r ', n, k, v)
-	with open(get_pin_path(n, k), 'wb', 0) as dst:
+	with gpio_access_wrap(
+			ft.partial(open, get_pin_path(n, k), 'wb', 0) ) as dst:
 		gpio_access_wrap(ft.partial(dst.write, bytes(v)))
 	_pin_state[n] = v
 
