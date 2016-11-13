@@ -185,11 +185,20 @@ some particular case:
 
 * [rpiSht1x](https://pypi.python.org/pypi/rpiSht1x) (python package)
 
-	Based on RaspberryPi-specific RPi.GPIO module, does not check CRC8 checksums
-	for received data, uses hard-coded 5V temperature conversion coefficients,
-	returns invalid values even if ack's are incorrect.
+	Uses RaspberryPi-specific RPi.GPIO module.
 
-	Seem to be more of a proof-of-concept, pretty much unusable anywhere else.
+	As of 2015-01-12, did not check CRC8 checksums for received data,
+	used hard-coded 5V temperature conversion coefficients,
+	returned invalid values even if ack's were incorrect,
+	looked more like proof-of-concept overall.
+
+* [Pi-Sht1x](https://github.com/drohm/pi-sht1x/) (python package)
+
+	Python-3.x module based on rpiSht1x, also uses RPi.GPIO, and rather similar to
+	this one, but with more extensive functionality - has most/all stuff from "not
+	implemented" list above, addresses all of the rpiSht1x shortcomings.
+
+	Probably wouldn't have bothered writing this module if it was around at the time.
 
 * sht1x module in [Linux kernel](https://www.kernel.org/)
 
