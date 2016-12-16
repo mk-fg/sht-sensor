@@ -13,7 +13,7 @@ except IOError: readme = ''
 setup(
 
 	name = 'sht-sensor',
-	version = '16.11.1',
+	version = '16.12.0',
 	author = 'Mike Kazantsev',
 	author_email = 'mk.fraggod@gmail.com',
 	license = 'WTFPL',

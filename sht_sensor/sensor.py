@@ -14,11 +14,54 @@ except ImportError:
 	for pkg_root in pkg_root, dirname(pkg_root):
 		if isdir(join(pkg_root, 'sht_sensor'))\
 				and exists(join(pkg_root, 'setup.py')):
-			sys.path.insert(0, dirname(__file__))
+			sys.path.insert(0, pkg_root)
 			try: import sht_sensor
 			except ImportError: pass
 			else: break
 	else: raise ImportError('Failed to find/import "sht_sensor" module')
+
+
+@ft.total_ordering
+class EnumValue(object):
+	'String-based enum value, comparable to native strings.'
+	__slots__ = '_t', '_value', '_c_val'
+	def __init__(self, t, value, c_value=None):
+		self._t, self._value, self._c_val = t, value, c_value
+	def __repr__(self): return '<EnumValue {} {}>'.format(self._t, self._value)
+	def __eq__(self, val):
+		print(val, self._value)
+		if isinstance(val, EnumValue): val = val._value
+		return self._value == val
+	def __ne__(self, val): return not (self == val)
+	def __lt__(self, val):
+		if isinstance(val, EnumValue): val = val._value
+		return self._value < val
+	def __hash__(self): return hash(self._value)
+
+class Enum(object):
+
+	def __init__(self, name, vals):
+		self._name, self._values, self._c_vals = name, dict(), dict()
+		for k, v in vals.items():
+			v = EnumValue(name, v)
+			setattr(self, k, v)
+
+	def __getitem__(self, k, *default):
+		if isinstance(k, EnumValue):
+			t, k, v = k._t, k._value, k
+			if t != self._name: raise KeyError(v)
+		try: return getattr(self, k, *default)
+		except AttributeError: raise KeyError(k)
+
+	def _get(self, k, default=None): return self.__getitem__(k, default)
+	def __contains__(self, k): return self._get(k) is not None
+
+	def __repr__(self):
+		return '<Enum {} [{}]>'.format(self._name, ' '.join(sorted(self._values.keys())))
+
+
+ShtVDDLevel = Enum('sht-vdd-level', dict(
+	vdd_5='5V', vdd_4='4V', vdd_3_5='3.5V', vdd_3='3V', vdd_2_5='2.5V' ))
 
 
 class ShtFailure(Exception): pass

@@ -65,7 +65,7 @@ typical precision is +/- 0.4 degree, so mostly irrelevant).
 If you're using non-SHT1x/SHT7x, but a similar sensor (e.g. some later model),
 it might be a good idea to look at the Sht class in the code and make sure all
 coefficients (taken from
-[SHT7x datasheet](https://www.sensirion.com/fileadmin/user_upload/customers/sensirion/Dokumente/Humidity_and_Temperature_Sensors/Sensirion_Humidity_and_Temperature_Sensors_SHT7x_Datasheet_V5.pdf))
+[SHT7x datasheet](https://www.sensirion.com/fileadmin/user_upload/customers/sensirion/Dokumente/Humidity_Sensors/Sensirion_Humidity_Sensors_SHT7x_Datasheet_V5.pdf))
 there match your model's datasheet exactly.
 
 See `sht --help` output for the full list of options for command-line tool.
@@ -78,8 +78,13 @@ Example usage from python code:
 	print 'Relative Humidity', sht.read_rh()
 
 Voltage value (see note on it above) on sensor's VDD pin can be specified for
-calculations exactly as it is presented in datasheet table as a string, if it's
-not module-default '3.5V', for example: `sht = Sht(21, 17, voltage='5V')`.
+calculations exactly as it is presented in datasheet table (either as a string
+or ShtVDDLevel enum value), if it's not module-default '3.5V', for example:
+`sht = Sht(21, 17, voltage=ShtVDDLevel.vdd_5v)`.
+
+It might be preferrable to use `ShtVDDLevel.vdd_5v` value over simple '5V'
+string as it should catch typos and similar bugs in cases, but makes no
+difference otherwise.
 
 Some calculations (e.g. for RH) use other sensor-provided values, so it's
 possible to pass these to the corresponding read_* methods, to avoid heating-up
