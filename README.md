@@ -83,7 +83,7 @@ or ShtVDDLevel enum value), if it's not module-default '3.5V', for example:
 `sht = Sht(21, 17, voltage=ShtVDDLevel.vdd_5v)`.
 
 It might be preferrable to use `ShtVDDLevel.vdd_5v` value over simple '5V'
-string as it should catch typos and similar bugs in cases, but makes no
+string as it should catch typos and similar bugs in some cases, but makes no
 difference otherwise.
 
 Some calculations (e.g. for RH) use other sensor-provided values, so it's
