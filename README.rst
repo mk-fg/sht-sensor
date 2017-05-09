@@ -75,10 +75,8 @@ typical precision is +/- 0.4 degree, so mostly irrelevant).
 
 If you're using non-SHT1x/SHT7x, but a similar sensor (e.g. some later model),
 it might be a good idea to look at the Sht class in the code and make sure all
-coefficients (taken from `SHT7x datasheet`_) there match your model's datasheet
-exactly.
-
-.. _SHT7x datasheet: https://www.sensirion.com/fileadmin/user_upload/customers/sensirion/Dokumente/Humidity_Sensors/Sensirion_Humidity_Sensors_SHT7x_Datasheet_V5.pdf
+coefficients (taken from SHT1x/SHT7x datasheet - google it, sensirion.com URL
+for it changed like 4 times in 2y) there match your model's datasheet exactly.
 
 See `sht --help` output for the full list of options for command-line tool.
 
