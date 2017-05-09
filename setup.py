@@ -7,13 +7,13 @@ import os, sys
 # Error-handling here is to allow package to be built w/o README included
 try:
 	readme = open(os.path.join(
-		os.path.dirname(__file__), 'README.txt' )).read()
+		os.path.dirname(__file__), 'README.rst' )).read()
 except IOError: readme = ''
 
 setup(
 
 	name = 'sht-sensor',
-	version = '17.5.1',
+	version = '17.5.2',
 	author = 'Mike Kazantsev',
 	author_email = 'mk.fraggod@gmail.com',
 	license = 'WTFPL',
