@@ -154,7 +154,13 @@ class ShtComms(object):
 
 		tick(1)
 		if self._data_get():
-			raise ShtCommFailure('Command ACK failed on step-1')
+			raise ShtCommFailure(
+				'Command ACK failed on step-1.'
+				' This indicates lack of response from the start,'
+					' as if sensor is not connected to specified pins.'
+				' Make sure it is connected and pin numbers are'
+					' specified correctly, and/or has/needs a pull-up resistor.'
+				' See README file for more information.')
 		tick(0)
 		if not self._data_get():
 			raise ShtCommFailure('Command ACK failed on step-2')
