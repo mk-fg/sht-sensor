@@ -9,7 +9,7 @@ import os, sys, logging, glob, time, select
 class OnDemandLogger(object):
 	log = None
 	def __getattr__(self, k):
-		if not self.log: self.log = logging.getLogger('bbb_gpio')
+		if not self.log: self.log = logging.getLogger('sht.gpio')
 		return getattr(self.log, k)
 log = OnDemandLogger()
 

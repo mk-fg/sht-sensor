@@ -5,10 +5,9 @@ Python driver and command-line tool for Sensirion SHT1x and SHT7x sensors
 connected to GPIO pins.
 
 
-|
-
 .. contents::
   :backlinks: none
+
 
 
 Description
@@ -33,6 +32,7 @@ Sensors include additional functionality available via the status register (like
 VDD level check, enabling internal heating element, resolution, OTP reload, etc)
 which may or may not also be implemented here, see "Stuff that is not
 implemented" section at the end.
+
 
 
 Usage
@@ -118,8 +118,9 @@ Installed python module can also be used from cli via the usual ``python -m
 sht_sensor ...`` convention.
 
 
+
 Installation
---------------------
+------------
 
 It's a regular package for Python 2.7 (not 3.X).
 
@@ -173,8 +174,16 @@ any installation, if that's the only thing you need there.
 .. _packaging.python.org: https://packaging.python.org/installing/
 
 
+
+
+Misc features / quirks
+----------------------
+
+Description of minor things that might be useful in some less common cases.
+
+
 ShtCommFailure: Command ACK failed on step-1
---------------------------------------------
+````````````````````````````````````````````
 
 Very common error indicating that there's no response from the sensor at all.
 
@@ -206,6 +215,21 @@ unlikely compared to aforementioned trivial issues.
 .. _controlling specified pins via /sys/class/gpio: https://www.kernel.org/doc/Documentation/gpio/sysfs.txt
 
 
+Max bit-banging frequency control
+`````````````````````````````````
+
+Max frequency value Can be passed either on command-line with --max-freq or when
+creating an Sht instance, with separate values for SCK and DATA pins, if necessary.
+
+Sensor can work just fine with very low frequencies like 20Hz -
+e.g. ``sht --max-freq 20 -trv 30 60`` - though that'd obviously slow things down a bit.
+
+Separate SCK:DATA frequencies (in that order): ``sht --max-freq 100:200 -trv 30 60``
+
+Same from python module: ``sht = Sht(21, 17, freq_sck=100, freq_data=200)``
+
+
+
 Stuff that is not implemented
 -----------------------------
 
@@ -233,9 +257,6 @@ Stuff that is not implemented
   Code is there, as ShtComms._skip_crc() method, but no idea why it might be
   preferrable to skip this check.
 
-- Changing SCK clock rate.
-
-  Might be desirable for slower boards or more electric-noisy environments.
 
 
 Links

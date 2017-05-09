@@ -60,6 +60,24 @@ class Enum(object):
 		return '<Enum {} [{}]>'.format(self._name, ' '.join(sorted(self._values.keys())))
 
 
+try: import ctypes as ct
+except ImportError: mono_time = None
+else:
+	def mono_time():
+		if not hasattr(mono_time, 'ts'):
+			class timespec(ct.Structure):
+				_fields_ = [('tv_sec', ct.c_long), ('tv_nsec', ct.c_long)]
+			librt = ct.CDLL('librt.so.1', use_errno=True)
+			mono_time.get = librt.clock_gettime
+			mono_time.get.argtypes = [ct.c_int, ct.POINTER(timespec)]
+			mono_time.ts = timespec
+		ts = mono_time.ts()
+		if mono_time.get(4, ct.pointer(ts)) != 0:
+			err = ct.get_errno()
+			raise OSError(err, os.strerror(err))
+		return ts.tv_sec + ts.tv_nsec * 1e-9
+
+
 ShtVDDLevel = Enum('sht-vdd-level', dict(
 	vdd_5='5V', vdd_4='4V', vdd_3_5='3.5V', vdd_3='3V', vdd_2_5='2.5V' ))
 
@@ -69,6 +87,8 @@ class ShtCommFailure(ShtFailure): pass
 class ShtCRCCheckError(ShtFailure): pass
 
 class ShtComms(object):
+
+	bitbang_delay_min = 0
 
 	def _crc8(self, cmd, v0, v1, _crc_table=[
 			0x00, 0x31, 0x62, 0x53, 0xc4, 0xf5, 0xa6, 0x97, 0xb9, 0x88, 0xdb, 0xea,
@@ -102,11 +122,12 @@ class ShtComms(object):
 		# See: http://graphics.stanford.edu/~seander/bithacks.html#ReverseByteWith64BitsDiv
 		return (crc * 0x0202020202 & 0x010884422010) % 1023
 
-	def __init__(self, pin_sck, pin_data, gpio=None):
+	def __init__(self, pin_sck, pin_data, gpio=None, freq_sck=None, freq_data=None):
 		if gpio is None:
 			from sht_sensor import gpio
 		self.pin_sck, self.pin_data, self.gpio = pin_sck, pin_data, gpio
-		self.log = logging.getLogger('Sht')
+		self.freq_sck, self.freq_data = map(self._freq_iter, [freq_sck, freq_data])
+		self.log = logging.getLogger('sht')
 		self._init()
 
 	def _init(self):
@@ -117,6 +138,21 @@ class ShtComms(object):
 	_cleanup = _init
 
 
+	def _freq_iter(self, freq):
+		if not freq:
+			while True:
+				time.sleep(self.bitbang_delay_min)
+				yield
+		if not mono_time:
+			raise ShtFailure( 'Unable to use frequency settings'
+				' due to failure to import monotonic timer func via ctypes' )
+		delay = 1.0 / freq
+		while True:
+			ts_next = mono_time() + delay
+			yield
+			delta = ts_next - mono_time()
+			if delta > 0: time.sleep(delta)
+
 	def _data_mode(self, mode):
 		if self.pin_data_mode != mode:
 			self.gpio.set_pin_value(self.pin_data, k='direction', v=mode)
@@ -125,6 +161,7 @@ class ShtComms(object):
 	def _data_set(self, v):
 		self._data_mode('out')
 		self.gpio.set_pin_value(self.pin_data, v, force=True)
+		next(self.freq_data)
 
 	def _data_get(self):
 		self._data_mode('in')
@@ -132,7 +169,7 @@ class ShtComms(object):
 
 	def _sck_tick(self, v):
 		self.gpio.set_pin_value(self.pin_sck, v)
-		time.sleep(0.0000001) # 100ns, not sure if actually makes a difference
+		next(self.freq_data)
 
 
 	def _send(self, cmd):
@@ -295,6 +332,12 @@ def main(args=None):
 	parser.add_argument('--voltage', default='3.5V', metavar='label_from_table',
 		help='Voltage value (exactly as presented'
 			' in datasheet table) that is used. Default: %(default)s')
+	parser.add_argument('--max-freq', metavar='hz[:hz]',
+		help='Max frequency for sending SCK/DATA bits, in Hz (times/s).'
+			' Two colon-separated values can be specified'
+				' to use separate frequency for SCK and DATA pins, in that order.'
+			' For example, specifying "20" will introduce ~50ms delays between each DATA/SCK change.'
+			' Default is unlimited - i.e. not introduce any additional delays.')
 
 	parser.add_argument('-t', '--temperature', action='store_true',
 		help='Print temperature value to stdout. Default if no other values were specified.')
@@ -310,7 +353,15 @@ def main(args=None):
 	logging.basicConfig(level=logging.DEBUG if opts.debug else logging.WARNING)
 	if not (opts.temperature or opts.rel_humidity or opts.dew_point): opts.temperature = True
 
-	sht = Sht(opts.pin_sck, opts.pin_data)
+	freq_kws = dict()
+	if opts.max_freq:
+		try:
+			freq_kws.update(zip(['freq_sck', 'freq_data'], map( float,
+				opts.max_freq.split(':', 1) if ':' in opts.max_freq else [opts.max_freq]*2 )))
+		except ValueError as err:
+			parser.error('Invalid frequency "hz[:hz]" spec {!r}: {}'.format(opts.max_freq, err))
+
+	sht = Sht(opts.pin_sck, opts.pin_data, **freq_kws)
 
 	p = '{name}: {val}' if opts.verbose else '{val}'
 	p = lambda name, val, fmt=p: print(fmt.format(name=name, val=val))
