@@ -1,3 +1,9 @@
+**DEPRECATION NOTICE**:
+this is an obsolete Python-2.7-only version of the module,
+kept here for historical purposes only, for any new projects
+use `kizniche/sht-sensor <https://github.com/kizniche/sht-sensor/>`_ instead.
+
+
 sht-sensor
 ==========
 
