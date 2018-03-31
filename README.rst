@@ -128,58 +128,13 @@ sht_sensor ...`` convention.
 Installation
 ------------
 
-It's a regular package for Python 2.7 (not 3.X).
+**DEPRECATION NOTICE**:
+this is an obsolete Python-2.7-only version of the module,
+kept here for historical purposes only, for any new projects
+use `kizniche/sht-sensor <https://github.com/kizniche/sht-sensor/>`_
+instead, see installation instructions there.
 
-If you have Python-3.x on linux as default "python" command (run ``python
---version`` to check), be sure to use python2/pip2 and such below.
-
-Using pip_ is the best way::
-
-  % pip install sht-sensor
-
-(add --user option to install into $HOME for current user only)
-
-Or, if you don't have "pip" command::
-
-  % python -m ensurepip
-  % python -m pip install --upgrade pip
-  % python -m pip install sht-sensor
-
-On a very old systems, **one of** these might work::
-
-  % easy_install pip
-  % pip install sht-sensor
-
-  % curl https://bootstrap.pypa.io/get-pip.py | python
-  % pip install sht-sensor
-
-  % easy_install sht-sensor
-
-  % git clone --depth=1 https://github.com/mk-fg/sht-sensor
-  % cd sht-sensor
-  % python setup.py install
-
-Current-git version can be installed like this::
-
-  % pip install 'git+https://github.com/mk-fg/sht-sensor.git#egg=sht-sensor'
-
-Note that to install stuff to system-wide PATH and site-packages (without
---user), elevated privileges (i.e. root and su/sudo) are often required.
-
-Use "...install --user", `~/.pydistutils.cfg`_ or virtualenv_ to do unprivileged
-installs into custom paths.
-
-More info on python packaging can be found at `packaging.python.org`_.
-
-Alternatively, ``./sht`` tool can be run right from the checkout tree without
-any installation, if that's the only thing you need there.
-
-.. _pip: http://pip-installer.org/
-.. _~/.pydistutils.cfg: http://docs.python.org/install/index.html#distutils-configuration-files
-.. _virtualenv: http://pypi.python.org/pypi/virtualenv
-.. _packaging.python.org: https://packaging.python.org/installing/
-
-
+"sht-sensor" on PyPI is packaged from there too.
 
 
 Misc features / quirks
