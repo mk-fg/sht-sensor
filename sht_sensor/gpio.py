@@ -1,9 +1,15 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function
 
-import itertools as it, operator as op, functools as ft
+import functools as ft
+import glob
+import logging
+import os
+import select
+import time
 from os.path import join, exists
-import os, sys, logging, glob, time, select
+
+from builtins import range
 
 
 class OnDemandLogger(object):
@@ -19,7 +25,7 @@ path_gpio = '/sys/class/gpio'
 class GPIOAccessFailure(Exception): pass
 
 def gpio_access_wrap(func, checks=12, timeout=1.0):
-	for n in xrange(checks, -1, -1):
+	for n in range(checks, -1, -1):
 		try: return func()
 		except (IOError, OSError): pass
 		if checks <= 0: break
@@ -64,7 +70,7 @@ def set_pin_value(n, v, k='value', force=False, _pin_state=dict()):
 	# log.debug('Setting parameter of pin-%s: %s = %r ', n, k, v)
 	with gpio_access_wrap(
 			ft.partial(open, get_pin_path(n, k), 'wb', 0) ) as dst:
-		gpio_access_wrap(ft.partial(dst.write, bytes(v)))
+		gpio_access_wrap(ft.partial(dst.write, bytes(str(v).encode('utf-8'))))
 	_pin_state[n] = v
 
 

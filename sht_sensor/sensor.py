@@ -2,8 +2,14 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function
 
-import itertools as it, operator as op, functools as ft
-import os, sys, logging, time, math
+import functools as ft
+import logging
+import math
+import os
+import sys
+import time
+
+from builtins import range
 
 try: import sht_sensor
 except ImportError:
@@ -184,7 +190,7 @@ class ShtComms(object):
 		data(1)
 
 		tick(0)
-		for n in xrange(8):
+		for n in range(8):
 			data(cmd & (1 << 7 - n))
 			tick(1)
 			tick(0)
@@ -207,7 +213,7 @@ class ShtComms(object):
 		## Proper edge-poll seem to always return POLLERR on BBB
 		## Also seem unreliable in general case, and not super-necessary here
 		# ack = self.gpio.poll_pin(self.pin_data, edge='falling')
-		for i in xrange(int(timeout / poll_interval) + 1):
+		for i in range(int(timeout / poll_interval) + 1):
 			time.sleep(poll_interval)
 			ack = self.gpio.get_pin_value(self.pin_data)
 			if not ack: break
@@ -217,7 +223,7 @@ class ShtComms(object):
 	def _read_bits(self, bits, v=0):
 		tick = self._sck_tick
 		self._data_mode('in')
-		for n in xrange(bits):
+		for n in range(bits):
 			tick(1)
 			v = v * 2 + self._data_get()
 			tick(0)
@@ -259,7 +265,7 @@ class ShtComms(object):
 
 	def _conn_reset(self):
 		self._data_set(1)
-		for n in xrange(10):
+		for n in range(10):
 			self._sck_tick(1)
 			self._sck_tick(0)
 
